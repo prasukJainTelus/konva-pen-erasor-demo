@@ -1,83 +1,95 @@
-import { ReactElement, useRef, useState } from "react";
+import { useEffect, useState, ReactElement, useRef, createRef } from "react";
 import Konva from "konva";
-import logo from "./logo.svg";
-import { useImage } from "react-konva-utils";
-
-import { Layer, Stage, Rect, Image, Line, Group } from "react-konva";
+import "./App.css";
 import { KonvaEventObject } from "konva/lib/Node";
+import { TOOLS } from "./data/tool";
+import Wizard from "./features/Wizard";
 
-interface shapeConfig {
-  type: "rect" | "line";
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-}
+function App(): ReactElement {
+  const wizard = useRef();
+  const [penDown, _setPenDown] = useState(false);
+  const penDownRef = useRef(penDown);
+  const setPenDown = (val: boolean) => {
+    _setPenDown(val);
+    penDownRef.current = val;
+  };
+  const [points, _setPoints] = useState<Set<[number, number]>>(new Set());
+  const markedPoints = useRef(points);
 
-function App(): React.ReactElement {
-  const [img, status] = useImage(logo);
-  const [erasors, setErasors] = useState<Array<shapeConfig>>([]);
+  const stage = useRef<Konva.Stage | null>(null);
+  const layer = useRef<Konva.Layer | null>(null);
+  const line = useRef<Konva.Line | null>(null);
 
-  function onDrag(e: KonvaEventObject<DragEvent>) {
-    const { x, y }: { x: number; y: number } = e.target.attrs;
-
-    setErasors(erasors.concat([
-      {
-        x1: x,
-        y1: y,
-        x2: x + 100,
-        y2: y + 100,
-        type: "rect",
-      },
-    ]));
+  function handlePointerUp() {
+    setPenDown(false);
   }
 
-  function onDragStart(e: KonvaEventObject<DragEvent>) {
-    const { x, y }: { x: number; y: number } = e.target.attrs;
+  function handlePointerDown() {
+    const pointerPosition = stage.current?.getPointerPosition();
 
-    setErasors([
-      {
-        x1: x,
-        y1: y,
-        x2: x + 100,
-        y2: y + 100,
-        type: "rect",
-      },
-    ]);
+    if (!pointerPosition) return;
+    setPenDown(true);
+
+    const tool = (wizard.current as any).getActiveTool() as keyof typeof TOOLS;
+
+    line.current = new Konva.Line({
+      stroke: "#f00",
+      strokeWidth: 5,
+      globalCompositeOperation:
+        tool === "pen" ? "source-over" : "destination-out",
+      points: [
+        pointerPosition.x,
+        pointerPosition.y,
+        pointerPosition.x,
+        pointerPosition.y,
+      ],
+    });
+
+    layer.current?.add(line.current);
   }
+
+  const handlePointerMove = (e: KonvaEventObject<PointerEvent>) => {
+    if (
+      !penDownRef.current ||
+      !stage.current ||
+      !wizard.current ||
+      !layer.current ||
+      !line.current
+    )
+      return;
+
+    var pointerPos = stage.current.getPointerPosition();
+    if (!pointerPos) return;
+
+    const newPoints = line.current
+      .points()
+      .concat([pointerPos.x, pointerPos.y]);
+    line.current.points(newPoints);
+  };
+
+  useEffect(() => {
+    const stg = new Konva.Stage({
+      width: 500,
+      height: 500,
+      container: "canvas",
+      name: "stage",
+    });
+
+    stg.on("pointerdown", handlePointerDown);
+    stg.on("pointerup", handlePointerUp);
+    stg.on("pointermove", handlePointerMove);
+
+    const lyr = new Konva.Layer();
+    stg.add(lyr);
+    layer.current = lyr;
+    stage.current = stg;
+  }, []);
 
   return (
-    <div style={{ width: "70vw", height: "70vh", border: "1px solid black" }}>
-      <Stage width={1000} height={1000}>
-        <Layer>
-        <Group width={1000} height={1000}>
-          <Image image={img} x={0} y={0} width={500} height={500} />
-       
-            {erasors.map((shape: shapeConfig, index) => (
-              <Rect
-                key={index}
-                x={shape.x1}
-                width={shape.x2 - shape.x1}
-                height={shape.y2 - shape.y1}
-                y={shape.y1}
-                fill="#000"
-              />
-            ))}
-          </Group>
-        </Layer>
-        <Layer>
-          <Rect
-            x={100}
-            y={100}
-            width={100}
-            height={100}
-            fill="red"
-            onDragMove={onDrag}
-            onDragStart={onDragStart}
-            draggable
-          />
-        </Layer>
-      </Stage>
+    <div className="app">
+      <div className="head">Pen and erasors</div>
+      <Wizard ref={wizard} />
+      <div id="canvas"></div>
     </div>
   );
 }
