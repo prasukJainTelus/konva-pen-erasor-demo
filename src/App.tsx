@@ -1,8 +1,8 @@
-import { useEffect, useState, ReactElement, useRef, createRef } from "react";
+import { useEffect, useState, ReactElement, useRef } from "react";
 import Konva from "konva";
 import "./App.css";
 import { KonvaEventObject } from "konva/lib/Node";
-import { TOOLS } from "./data/tool";
+import Tool from "./tools/Tool";
 import Wizard from "./features/Wizard";
 
 function App(): ReactElement {
@@ -30,41 +30,18 @@ function App(): ReactElement {
     if (!pointerPosition) return;
     setPenDown(true);
 
-    const tool = (wizard.current as any).getActiveTool() as keyof typeof TOOLS;
+    const tool = (wizard.current as any).getActiveTool() as InstanceType<
+      typeof Tool
+    >;
 
-    line.current = new Konva.Line({
-      stroke: "#f00",
-      strokeWidth: 5,
-      globalCompositeOperation:
-        tool === "pen" ? "source-over" : "destination-out",
-      points: [
-        pointerPosition.x,
-        pointerPosition.y,
-        pointerPosition.x,
-        pointerPosition.y,
-      ],
-    });
-
-    layer.current?.add(line.current);
+    layer.current?.add(tool.shape);
   }
 
   const handlePointerMove = (e: KonvaEventObject<PointerEvent>) => {
-    if (
-      !penDownRef.current ||
-      !stage.current ||
-      !wizard.current ||
-      !layer.current ||
-      !line.current
-    )
-      return;
-
-    var pointerPos = stage.current.getPointerPosition();
-    if (!pointerPos) return;
-
-    const newPoints = line.current
-      .points()
-      .concat([pointerPos.x, pointerPos.y]);
-    line.current.points(newPoints);
+    const tool = (wizard.current as any).getActiveTool() as InstanceType<
+      typeof Tool
+    >;
+    tool.handlePointerMove(stage.current!);
   };
 
   useEffect(() => {
