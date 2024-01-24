@@ -41,7 +41,7 @@ function App(): ReactElement {
     const tool = (wizard.current as any).getActiveTool() as InstanceType<
       typeof Tool
     >;
-    tool.handlePointerMove(stage.current!);
+    if (penDownRef.current) tool.handlePointerMove(stage.current!);
   };
 
   useEffect(() => {
