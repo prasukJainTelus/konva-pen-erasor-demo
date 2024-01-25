@@ -1,9 +1,7 @@
-import { Rect, RectConfig } from "konva/lib/shapes/Rect";
+import { Rect } from "konva/lib/shapes/Rect";
 import Tools from "./Tool";
 import { IRectToolParams } from "./interfaces";
 import { Stage } from "konva/lib/Stage";
-
-type IUpdatableKeys = "strokeWidth" | "stroke";
 
 class RectangleTool extends Tools {
   public shape: Rect;
@@ -41,14 +39,6 @@ class RectangleTool extends Tools {
     const height = pointerPosition.y - this.shape.y();
     this.shape.width(width);
     this.shape.height(height);
-  }
-
-  public updateConfig<T extends IUpdatableKeys>(
-    key: T,
-    value: RectConfig[T],
-  ): void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    this.shape[key](value as any);
   }
 }
 export default RectangleTool;

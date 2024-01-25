@@ -1,9 +1,7 @@
-import { Ellipse, EllipseConfig } from "konva/lib/shapes/Ellipse";
+import { Ellipse } from "konva/lib/shapes/Ellipse";
 import Tools from "./Tool";
 import { IEllipseToolParams } from "./interfaces";
 import { Stage } from "konva/lib/Stage";
-
-type IUpdatableKeys = "strokeWidth" | "stroke";
 
 class EllipseTool extends Tools {
   public shape: Ellipse;
@@ -41,14 +39,6 @@ class EllipseTool extends Tools {
     const radiusY = Math.abs(pointerPosition.y - this.shape.y());
     this.shape.radiusX(radiusX);
     this.shape.radiusY(radiusY);
-  }
-
-  public updateConfig<T extends IUpdatableKeys>(
-    key: T,
-    value: EllipseConfig[T],
-  ): void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    this.shape[key](value as any);
   }
 }
 export default EllipseTool;

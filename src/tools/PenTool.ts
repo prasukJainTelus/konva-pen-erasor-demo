@@ -3,8 +3,6 @@ import Tools from "./Tool";
 import { ILineToolParams } from "./interfaces";
 import { Stage } from "konva/lib/Stage";
 
-type IUpdatableKeys = "strokeWidth" | "stroke";
-
 class PenTool extends Tools {
   public shape: Line<LineConfig>;
   public key: string = "pen";
@@ -38,14 +36,6 @@ class PenTool extends Tools {
       .concat([pointerPosition.x, pointerPosition.y]);
 
     this.shape.points(newPoints);
-  }
-
-  public updateConfig<T extends IUpdatableKeys>(
-    key: T,
-    value: LineConfig[T],
-  ): void {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    this.shape[key](value as any);
   }
 }
 export default PenTool;

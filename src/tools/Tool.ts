@@ -20,15 +20,6 @@ abstract class Tool {
    * @property: `stage` [Stage](konva/lib/Stage)
    */
   public abstract handlePointerMove(stage: Stage): void;
-
-  /**
-   * Update the configuration with the given key and value.
-   *
-   * @param {string} key - The key to update in the configuration
-   * @param {any} value - The value to set for the key
-   * @return {void}
-   */
-  public abstract updateConfig(key: string, value: any): void;
 }
 
 export default Tool;

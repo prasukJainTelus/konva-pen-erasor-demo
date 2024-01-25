@@ -1,4 +1,4 @@
-.app{
+.app {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -6,12 +6,17 @@
   overflow: hidden;
 }
 
-.head{
+.head {
   padding: 20px;
-  font-weight:bold;
+  font-weight: bold;
   font-size: large;
 }
-.wizard{
+
+.wizard-container {
+  display: flex;
+  gap: 30px;
+}
+.wizard {
   margin: 20px;
   padding: 20px 30px;
   background: #aaa;
@@ -19,31 +24,28 @@
   border-radius: 4px;
   display: flex;
 }
-.wizard-toggle{
+.wizard-toggle {
   background-color: #6c757d;
   padding: 7px 10px;
   font-size: 15px;
   color: white;
   border: none;
 }
-.wizard-toggle:first-of-type{
+.wizard-toggle:first-of-type {
   border-radius: 4px 0 0 4px;
-
 }
-.wizard-toggle:last-of-type{
+.wizard-toggle:last-of-type {
   border-radius: 0 4px 4px 0;
-
 }
-.wizard-toggle.erasor{
+.wizard-toggle.erasor {
   font-size: 23px;
   padding: 3px 10px;
-
 }
-.wizard-toggle.selected{
+.wizard-toggle.selected {
   background: #545b62;
 }
 
-#canvas{
+#canvas {
   border: 1px solid black;
   width: 500px;
   height: 500px;

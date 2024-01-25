@@ -27,9 +27,9 @@ class ToolController {
     this.setActiveTool("pen");
   }
 
-  public setActiveTool(activeTool: keyof typeof ToolConfig) {
+  public setActiveTool(activeTool?: keyof typeof ToolConfig) {
     this.activeTool = activeTool;
-
+    if (!this.activeTool) return;
     this.stage.on("pointerdown", this.handlePointerDown.bind(this));
     this.stage.on("pointerup", this.handlePointerUp.bind(this));
     this.stage.on("pointermove", this.handlePointerMove.bind(this));
@@ -79,6 +79,27 @@ class ToolController {
         this.activeToolInstance = new EllipseTool(params);
         break;
     }
+  }
+
+  public download() {
+    const dataURL = this.stage.toDataURL({ pixelRatio: 3 });
+    this.downloadURI(dataURL, "stage.png");
+  }
+
+  private downloadURI(dataURI: string, filename: string) {
+    const link = document.createElement("a");
+    link.download = filename;
+    link.hidden = true;
+    link.href = dataURI;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  public setDrag(drag: boolean) {
+    this.layer.children.forEach(child => {
+      child.draggable(drag);
+    });
   }
 }
 
