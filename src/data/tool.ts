@@ -1,8 +1,8 @@
 export const TOOLS = {
   pen: {
-    label: "✎"
+    label: "✎",
   },
   erasor: {
-    label: "■"
+    label: "■",
   },
 };

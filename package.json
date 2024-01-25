@@ -12,12 +12,16 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "customize-cra": "^1.0.0",
+    "husky": "^9.0.1",
     "konva": "^9.3.0",
+    "pre-commit": "^1.2.2",
+    "pretty-quick": "^4.0.0",
     "react": "^18.2.0",
     "react-app-rewired": "^2.2.1",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.3",
     "react-scripts": "5.0.1",
+    "rimraf": "^5.0.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -25,7 +29,17 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "precommit": "npm run lint",
+    "lint": "eslint . --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   },
   "browserslist": {
     "production": [
@@ -44,15 +58,24 @@
     "pnpm": ">=7"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
-    "eslint": "^7.20.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.x",
+    "eslint": "^8.56.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard-with-typescript": "^43.0.1",
+    "eslint-plugin-deprecation": "^2.0.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "git-format-staged": "^3.0.0",
+    "husky": "^9.0.1",
+    "lint-staged": "^15.2.0",
     "prettier": "3.2.4",
-    "typescript": "^4.9.5"
+    "typescript": "^5.3.3"
   }
 }

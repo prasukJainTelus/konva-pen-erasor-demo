@@ -1,37 +1,34 @@
-import React from "react";
-import PenTool from "@/tools/PenTool";
-import Tool from "@/tools/Tool";
-import ToolMapper from "@/tools/ToolMapper";
+import React, { useEffect } from "react";
+import ToolConfig from "@/tools/toolConfigs";
+import ToolController from "@/controller/ToolController";
 
-const Wizard = React.forwardRef((props, ref) => {
-  const [tool, setTool] = React.useState<InstanceType<typeof Tool>>(
-    new PenTool({ color: "#f00" }),
-  );
-  React.useImperativeHandle(
-    ref,
-    () => ({
-      getActiveTool: () => {
-        return tool;
-      },
-    }),
-    [tool],
-  );
+function Wizard({
+  toolController,
+}: {
+  toolController: React.MutableRefObject<ToolController | undefined>;
+}) {
+  const [activeTool, setActiveTool] = React.useState("pen");
 
-  function updateTool(tool: (typeof ToolMapper)[keyof typeof ToolMapper]) {
-    setTool(tool.tool({ color: "#f00" }));
+  useEffect(() => {
+    setActiveTool(toolController.current?.activeTool || "pen");
+  }, [toolController]);
+  function onSelectTool(key: keyof typeof ToolConfig) {
+    if (toolController.current) toolController.current.setActiveTool(key);
+    setActiveTool(key);
   }
+
   return (
     <div className="wizard">
-      {Object.entries(ToolMapper).map(([key, val]) => (
+      {Object.entries(ToolConfig).map(([key, val]) => (
         <button
           key={key}
-          className={`wizard-toggle ${tool.key === key && "selected"}`}
-          onClick={() => updateTool(val)}
-        >
+          className={`wizard-toggle ${activeTool === key && "selected"}`}
+          onClick={() => onSelectTool(key as keyof typeof ToolConfig)}>
           {val.label}
         </button>
       ))}
     </div>
   );
-});
+}
+
 export default Wizard;

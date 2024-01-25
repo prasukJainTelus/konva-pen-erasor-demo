@@ -1,20 +1,19 @@
 import { Shape } from "konva/lib/Shape";
-import { ToolConfig } from "./interfaces";
-import { KonvaEventObject } from "konva/lib/Node";
+import { IToolParams } from "./interfaces";
 import { Stage } from "konva/lib/Stage";
 
-abstract class Tool<T extends Shape> {
+abstract class Tool {
   /**
    * Add Konva Shape
    */
-  public abstract shape: T;
+  public abstract shape: Shape;
 
   public abstract key: string;
   /**
    * Provide default configurations for shapes.
    * @note Please extend [ToolConfig](./interfaces.ts) interface
    */
-  protected abstract defaultConfig: ToolConfig;
+  protected abstract defaultConfig: IToolParams;
 
   /**
    * Fires when ponter is moved on drag

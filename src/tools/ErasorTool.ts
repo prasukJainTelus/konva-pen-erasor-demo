@@ -1,21 +1,21 @@
 import { Line, LineConfig } from "konva/lib/shapes/Line";
 import Tools from "./Tool";
-import { LineToolConfig } from "./interfaces";
+import { ILineToolParams } from "./interfaces";
 import { Stage } from "konva/lib/Stage";
 
 type IUpdatableKeys = "strokeWidth" | "stroke";
 
-class ErasorTool extends Tools<Line<LineConfig>> {
+class ErasorTool extends Tools {
   public shape: Line<LineConfig>;
   public key: string = "erasor";
-  protected defaultConfig: LineToolConfig = {
+  protected defaultConfig: ILineToolParams = {
     color: "#f00",
     x: 0,
     y: 0,
     strokeWidth: 5,
   };
 
-  constructor(partianConfig: Partial<LineToolConfig>) {
+  constructor(partianConfig: Partial<ILineToolParams>) {
     super();
     const config = {
       ...this.defaultConfig,
@@ -30,7 +30,7 @@ class ErasorTool extends Tools<Line<LineConfig>> {
   }
 
   public handlePointerMove(stage: Stage): void {
-    var pointerPosition = stage.getPointerPosition();
+    const pointerPosition = stage.getPointerPosition();
     if (!pointerPosition) return;
 
     const newPoints = this.shape
@@ -44,6 +44,7 @@ class ErasorTool extends Tools<Line<LineConfig>> {
     key: IUpdatableKeys,
     value: LineConfig[IUpdatableKeys],
   ): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.shape[key](value as any);
   }
 }
