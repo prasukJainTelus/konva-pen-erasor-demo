@@ -12,7 +12,6 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "customize-cra": "^1.0.0",
-    "husky": "^9.0.1",
     "konva": "^9.3.0",
     "pre-commit": "^1.2.2",
     "pretty-quick": "^4.0.0",
@@ -29,17 +28,8 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "preinstall": "npx only-allow pnpm",
-    "precommit": "npm run lint",
+    "preinstall": "npx only-allow pnpm && cp pre-commit .git/hooks/ && chmod 755 .git/hooks/pre-commit && echo 'hook copied'",
     "lint": "eslint . --fix"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
   },
   "browserslist": {
     "production": [
@@ -73,7 +63,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "git-format-staged": "^3.0.0",
-    "husky": "^9.0.1",
     "lint-staged": "^15.2.0",
     "prettier": "3.2.4",
     "typescript": "^5.3.3"
