@@ -17,6 +17,7 @@ function Wizard({
 
     toolController.current.setActiveTool(key as keyof typeof ToolConfig);
     if (activeTool === "drag") toolController.current.setDrag(false);
+    if (activeTool === "select") toolController.current.setSelectable(false);
 
     setActiveTool(key);
   }
@@ -26,6 +27,15 @@ function Wizard({
     if (!toolController.current) return;
     toolController.current.setActiveTool();
     toolController.current.setDrag(true);
+    if (activeTool === "select") toolController.current.setSelectable(false);
+  }
+
+  function onSelectSelectTool() {
+    if (!toolController.current) return;
+    toolController.current.setActiveTool();
+    if (activeTool === "drag") toolController.current.setDrag(false);
+    setActiveTool("select");
+    toolController.current.setSelectable(true);
   }
 
   function download() {
@@ -48,6 +58,12 @@ function Wizard({
           <button
             className={`wizard-toggle ${activeTool === "drag" && "selected"}`}
             onClick={() => onSelectPointer()}>
+            ✊
+          </button>
+
+          <button
+            className={`wizard-toggle ${activeTool === "select" && "selected"}`}
+            onClick={() => onSelectSelectTool()}>
             ✊
           </button>
 

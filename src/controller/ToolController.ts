@@ -13,6 +13,7 @@ class ToolController {
   private stage: Konva.Stage;
   private penDown = false;
   private layer: Konva.Layer;
+  private transformer?: Konva.Transformer;
 
   constructor() {
     this.stage = new Konva.Stage({
@@ -24,6 +25,7 @@ class ToolController {
 
     this.layer = new Konva.Layer();
     this.stage.add(this.layer);
+
     this.setActiveTool("pen");
   }
 
@@ -99,6 +101,20 @@ class ToolController {
   public setDrag(drag: boolean) {
     this.layer.children.forEach(child => {
       child.draggable(drag);
+    });
+  }
+
+  public setSelectable(selectable: boolean) {
+    if (!selectable) return this.transformer?.remove();
+    this.layer.children.forEach(child => {
+      if (child instanceof Konva.Transformer) return;
+      child.on("pointerclick", () => {
+        if (!selectable) return this.transformer?.nodes([]);
+        this.transformer = new Konva.Transformer();
+        this.transformer.nodes([child]);
+
+        this.layer.add(this.transformer);
+      });
     });
   }
 }
