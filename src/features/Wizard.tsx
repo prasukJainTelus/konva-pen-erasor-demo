@@ -64,7 +64,7 @@ function Wizard({
           <button
             className={`wizard-toggle ${activeTool === "select" && "selected"}`}
             onClick={() => onSelectSelectTool()}>
-            ✊
+            ✥
           </button>
 
           <button className={`wizard-toggle`} onClick={() => download()}>

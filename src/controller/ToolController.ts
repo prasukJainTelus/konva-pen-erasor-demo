@@ -105,15 +105,43 @@ class ToolController {
   }
 
   public setSelectable(selectable: boolean) {
-    if (!selectable) return this.transformer?.remove();
+    if (!selectable) {
+      this.transformer?.nodes([]);
+      this.transformer?.detach();
+      document.body.onkeydown = () => {};
+      this.layer.children.forEach(child => {
+        // eslint-disable-next-line no-console
+        console.log(child);
+
+        child.on("pointerclick", () => {});
+      });
+      this.transformer = undefined;
+
+      return;
+    }
     this.layer.children.forEach(child => {
       if (child instanceof Konva.Transformer) return;
       child.on("pointerclick", () => {
         if (!selectable) return this.transformer?.nodes([]);
-        this.transformer = new Konva.Transformer();
+        if (!this.transformer) {
+          this.transformer = new Konva.Transformer();
+          this.layer.add(this.transformer);
+        }
         this.transformer.nodes([child]);
+        const container = document.body;
+        container.onkeydown = (ev: KeyboardEvent) => {
+          if (ev.ctrlKey && ev.key == "d")
+            this.transformer?.nodes().forEach(node => {
+              this.layer.add(
+                node.clone({
+                  x: node.x() + 10,
+                  y: node.y() + 10,
+                }) as Konva.Shape,
+              );
+            }, true);
 
-        this.layer.add(this.transformer);
+          document.body.focus();
+        };
       });
     });
   }
